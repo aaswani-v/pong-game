@@ -36,7 +36,7 @@ if random.randint(1,2):
 #----------------------------------------------------------#
 
 def main():
-    global started, paddle_1_speed, paddle_2_speed
+    global started, paddle_1_speed, paddle_2_speed, ball_accel_x, ball_accel_y
 
     pygame.init()
 
@@ -52,30 +52,42 @@ def main():
                 pygame.quit()
                 return
             
-            # for key down events
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    started = True
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
 
-                if event.key == pygame.K_w:
-                    paddle_1_speed = -PADDLE_SPEED
-                if event.key == pygame.K_s:
-                    paddle_1_speed = PADDLE_SPEED
-                if event.key == pygame.K_UP:
-                    paddle_2_speed = -PADDLE_SPEED
-                if event.key == pygame.K_DOWN:
-                    paddle_2_speed = PADDLE_SPEED
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        started = True
+
+
                 
-            # for key up events
-            if event.type == pygame.KEYUP:
-                if event.key in (pygame.K_w, pygame.K_s):
-                    paddle_1_speed = 0
-                if event.key in  (pygame.K_UP, pygame.K_DOWN):
-                    paddle_2_speed = 0
+            keys = pygame.key.get_pressed()
+            paddle_1_speed = 0
+            paddle_2_speed = 0
+            
+            if keys[pygame.K_w]:
+                paddle_1_speed = -PADDLE_SPEED
+            if keys[pygame.K_s]:
+                paddle_1_speed = PADDLE_SPEED
+                
+            if keys[pygame.K_UP]:
+                paddle_2_speed = -PADDLE_SPEED
+            if keys[pygame.K_DOWN]:
+                paddle_2_speed = PADDLE_SPEED
+
                     
                     
             paddle_1_rect.y += paddle_1_speed
             paddle_2_rect.y += paddle_2_speed
+            
+        if started:
+            ball_rect.x += ball_accel_x * 60
+            ball_rect.y += ball_accel_y * 60
+            
+        if ball_rect.top <= 0 or ball_rect.bottom >= SCREEN_HEIGHT:
+            ball_accel_y *= -1
 
         if not started:
             font = pygame.font.Font(None, 30)
