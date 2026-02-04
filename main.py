@@ -1,6 +1,7 @@
 #importing the libraries
 import pygame
 import random
+import datetime
 
 #WINDOWS size
 SCREEN_WIDTH = 960
