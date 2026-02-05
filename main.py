@@ -52,36 +52,29 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    started = True
+
+        keys = pygame.key.get_pressed()
+        paddle_1_speed = 0
+        paddle_2_speed = 0
+        
+        if keys[pygame.K_w]:
+            paddle_1_speed = -PADDLE_SPEED
+        if keys[pygame.K_s]:
+            paddle_1_speed = PADDLE_SPEED
             
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return
+        if keys[pygame.K_UP]:
+            paddle_2_speed = -PADDLE_SPEED
+        if keys[pygame.K_DOWN]:
+            paddle_2_speed = PADDLE_SPEED
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        started = True
+        paddle_1_rect.y += paddle_1_speed
+        paddle_2_rect.y += paddle_2_speed
 
-
-                
-            keys = pygame.key.get_pressed()
-            paddle_1_speed = 0
-            paddle_2_speed = 0
-            
-            if keys[pygame.K_w]:
-                paddle_1_speed = -PADDLE_SPEED
-            if keys[pygame.K_s]:
-                paddle_1_speed = PADDLE_SPEED
-                
-            if keys[pygame.K_UP]:
-                paddle_2_speed = -PADDLE_SPEED
-            if keys[pygame.K_DOWN]:
-                paddle_2_speed = PADDLE_SPEED
-
-                    
-                    
-            paddle_1_rect.y += paddle_1_speed
-            paddle_2_rect.y += paddle_2_speed
+        paddle_1_rect.y = max(0, min(SCREEN_HEIGHT - paddle_1_rect.height, paddle_1_rect.y))
+        paddle_2_rect.y = max(0, min(SCREEN_HEIGHT - paddle_2_rect.height, paddle_2_rect.y))
             
         if started:
             ball_rect.x += ball_accel_x * 60
