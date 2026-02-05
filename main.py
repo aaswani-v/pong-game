@@ -17,6 +17,8 @@ paddle_2_speed = 0
 PADDLE_SPEED = 5
 score_1 = 0
 score_2 = 0
+# play with this to increase or decrease the speed of the ball
+BALL_SPEED = 30
 
 # rectangle representing the paddles
 paddle_1_rect = pygame.Rect(30, 0, 7, 100)
@@ -91,8 +93,8 @@ def main():
         paddle_2_rect.y = max(0, min(SCREEN_HEIGHT - paddle_2_rect.height, paddle_2_rect.y))
             
         if started:
-            ball_rect.x += ball_accel_x * 60
-            ball_rect.y += ball_accel_y * 60
+            ball_rect.x += ball_accel_x * BALL_SPEED
+            ball_rect.y += ball_accel_y * BALL_SPEED
             
         if ball_rect.top <= 0 or ball_rect.bottom >= SCREEN_HEIGHT:
             ball_accel_y *= -1
