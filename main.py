@@ -15,6 +15,8 @@ started = False
 paddle_1_speed = 0
 paddle_2_speed = 0
 PADDLE_SPEED = 5
+score_1 = 0
+score_2 = 0
 
 # rectangle representing the paddles
 paddle_1_rect = pygame.Rect(30, 0, 7, 100)
@@ -36,13 +38,25 @@ if random.randint(1,2):
 
 #----------------------------------------------------------#
 
+def reset_ball():
+    global ball_accel_x, ball_accel_y
+    ball_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    ball_accel_x = random.randint(2,4) * 0.1
+    ball_accel_y = random.randint(2,4) * 0.1
+    if random.randint(1,2):
+        ball_accel_x *= -1
+    if random.randint(1,2):
+        ball_accel_y *= -1
+
 def main():
-    global started, paddle_1_speed, paddle_2_speed, ball_accel_x, ball_accel_y
+    global started, paddle_1_speed, paddle_2_speed, ball_accel_x, ball_accel_y, score_1, score_2
 
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("PONG GAME")
+
+    score_font = pygame.font.Font(None, 48)
 
     while True:
         clock.tick(60)  
@@ -83,6 +97,18 @@ def main():
         if ball_rect.top <= 0 or ball_rect.bottom >= SCREEN_HEIGHT:
             ball_accel_y *= -1
 
+        if ball_rect.colliderect(paddle_1_rect) and ball_accel_x < 0:
+            ball_accel_x *= -1
+        if ball_rect.colliderect(paddle_2_rect) and ball_accel_x > 0:
+            ball_accel_x *= -1
+
+        if ball_rect.left <= 0:
+            score_2 += 1
+            reset_ball()
+        elif ball_rect.right >= SCREEN_WIDTH:
+            score_1 += 1
+            reset_ball()
+
         if not started:
             font = pygame.font.Font(None, 30)
             text = font.render("Press SPACE to start the game", True, COLOR_WHITE)
@@ -92,6 +118,10 @@ def main():
         pygame.draw.rect(screen, COLOR_WHITE, paddle_1_rect)
         pygame.draw.rect(screen, COLOR_WHITE, paddle_2_rect)
         pygame.draw.rect(screen, COLOR_WHITE, ball_rect)
+
+        score_text = score_font.render(f"{score_1}   {score_2}", True, COLOR_WHITE)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 40))
+        screen.blit(score_text, score_rect)
 
         pygame.display.update()
 
